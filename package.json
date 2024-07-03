@@ -1,26 +1,42 @@
 {
-  "name": "consumer_site_api",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Brahm Van Houzen",
-  "license": "MIT",
-  "dependencies": {
-    "@apollo/server": "^4.10.4",
-    "@aws-sdk/client-s3": "^3.608.0",
-    "@aws-sdk/credential-providers": "^3.606.0",
-    "@aws-sdk/s3-request-presigner": "^3.608.0",
-    "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.5",
-    "graphql-constraint-directive": "^5.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.8.0",
-    "mongoose": "^8.4.4",
-    "ncp": "^2.0.0",
-    "python-shell": "^5.0.0",
-    "ts-node": "^10.9.2"
-  }
+	"name": "consumer_site_api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Brahm Van Houzen",
+	"license": "MIT",
+	"dependencies": {
+		"@apollo/server": "^4.10.4",
+		"@aws-sdk/client-s3": "^3.608.0",
+		"@aws-sdk/credential-providers": "^3.606.0",
+		"@aws-sdk/s3-request-presigner": "^3.608.0",
+		"bcryptjs": "^2.4.3",
+		"dotenv": "^16.4.5",
+		"graphql-constraint-directive": "^5.4.3",
+		"jsonwebtoken": "^9.0.2",
+		"mongodb": "^6.8.0",
+		"mongoose": "^8.4.4",
+		"ncp": "^2.0.0",
+		"python-shell": "^5.0.0",
+		"ts-node": "^10.9.2"
+	},
+	"devDependencies": {
+		"@graphql-codegen/cli": "5.0.0",
+		"@graphql-codegen/introspection": "4.0.0",
+		"@graphql-codegen/typescript": "4.0.1",
+		"@graphql-codegen/typescript-resolvers": "4.0.1",
+		"@types/bcryptjs": "^2.4.6",
+		"@types/dotenv": "^8.2.0",
+		"@types/express": "^4.17.21",
+		"@types/jsonwebtoken": "^9.0.6",
+		"@types/mongoose": "^5.11.97",
+		"@types/multer": "^1.4.11",
+		"@types/node": "^20.10.5",
+		"nodemon": "^2.0.3",
+		"ts-node": "^10.9.2",
+		"typescript": "^5.2.2"
+	}
 }
