@@ -1,7 +1,7 @@
-// import { QueryResolvers } from '../__generated__/graphql';
+import { QueryResolvers } from '../generated/graphql';
 import scrape from '../lib/thumbtack_review_scraper';
 
-const queries = {
+const queries: QueryResolvers = {
 	queryThumbtackReviews: async () => {
 		try {
 			const reviews = scrape();

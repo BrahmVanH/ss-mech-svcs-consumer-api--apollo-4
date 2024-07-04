@@ -1,4 +1,4 @@
-// import { ThumbtackReview } from '../../__generated__/graphql';
+import { ThumbtackReview } from '../../generated/graphql';
 import { extractThumbtackData } from './helper';
 
 import { execSync } from 'child_process';
@@ -7,7 +7,7 @@ import { execSync } from 'child_process';
 // I wasn't able to get the timing right for getting the data, so I
 // chose to just block the thread until the data is returned.
 const scrape = () => {
-	const scrapedData = execSync('python utils/thumbtack_review_scraper/thumbtack_scraper.py', { encoding: 'utf8' });
+	const scrapedData = execSync('python src/lib/thumbtack_review_scraper/thumbtack_scraper.py', { encoding: 'utf8' });
 	const jsonString = scrapedData.replace(/ '/g, ' "').replace(/' /g, '" ').replace(/{'/g, '{"').replace(/'}/g, '"}').replace(/':/g, '":').replace(/',/g, '",');
 	console.log('jsonString', jsonString);
 	const reviewJson = JSON.parse(jsonString);
