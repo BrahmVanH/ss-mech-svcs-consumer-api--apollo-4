@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { typeDefs, resolvers } from './src/schema';
+import { typeDefs, resolvers } from './schema';
 import { ApolloServer, BaseContext } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { expressMiddleware } from '@apollo/server/express4';
