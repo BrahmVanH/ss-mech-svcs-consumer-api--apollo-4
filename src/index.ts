@@ -34,12 +34,12 @@ const server = new ApolloServer<BaseContext>({
 	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-// const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
+const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 
 const startApolloServer = async () => {
 	try {
 		await server.start();
-		app.use('/graphql', cors<cors.CorsRequest>({ origin: process.env.CORS_ORIGINS }), express.json(), expressMiddleware(server));
+		app.use('/graphql', cors({ origin: allowedOrigins }), express.json(), expressMiddleware(server));
 		// app.use((req, res, next) => {
 		// 	if (!allowedOrigins.includes(req.headers.origin ?? '')) {
 		// 		console.log('Origin not allowed:', req.headers.origin);
@@ -53,7 +53,7 @@ const startApolloServer = async () => {
 
 const startHttpServer = async () => {
 	try {
-		await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
+		await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
 		console.log(`🚀 Server ready at http://localhost:4000/graphql`);
 	} catch (err: any) {
 		console.error('Error starting server', err);
