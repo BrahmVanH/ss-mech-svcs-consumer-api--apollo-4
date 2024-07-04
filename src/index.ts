@@ -17,49 +17,64 @@ dotenv.config();
 
 const app = express();
 
+// Create an http server to use locally - hosting provider will 
+// provide Secure transfers in production
+
 const httpServer = http.createServer(app);
 
+// Declare local port or allow hosting provider to assign port
+
 const port = process.env.PORT ?? 4000;
+
+// Create schema and apply constraint directives for validation
 
 let schema = makeExecutableSchema({
 	typeDefs: [constraintDirectiveTypeDefs, typeDefs],
 	resolvers,
 });
 
+// Apply constraint directives to schema
+
 schema = constraintDirective()(schema);
 
+// Create Apollo Server instance
+
+// To Do: Disable introspection in production after live testing
 const server = new ApolloServer<BaseContext>({
 	schema,
 	introspection: true,
 	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
+// Allow only specified origins to access the server
+
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
+
+// Start Apollo Server, Apply middleware to express app, including CORS and JSON parsing,
+// allows server to use /graphql endpoint
 
 const startApolloServer = async () => {
 	try {
 		await server.start();
 		app.use('/graphql', cors({ origin: allowedOrigins }), express.json(), expressMiddleware(server));
-		// app.use((req, res, next) => {
-		// 	if (!allowedOrigins.includes(req.headers.origin ?? '')) {
-		// 		console.log('Origin not allowed:', req.headers.origin);
-		// 	}
-		// 	next();
-		// });
+	
 	} catch (err: any) {
 		console.error('Error starting server', err);
 	}
 };
+
+// Define how to start the http server on designated port
 
 const startHttpServer = async () => {
 	try {
 		await new Promise<void>((resolve) => httpServer.listen({ port }, resolve));
-		console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+		console.log(`🚀 Server ready at port: ${port}`);
 	} catch (err: any) {
 		console.error('Error starting server', err);
 	}
 };
 
+// Start the Apollo Server and the HTTP Server
 startApolloServer()
 	.then(() => {
 		startHttpServer();
