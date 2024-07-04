@@ -401,7 +401,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs",
+                "name": "message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_",
                 "ofType": null
               }
             },
@@ -1654,7 +1654,7 @@
       },
       {
         "kind": "SCALAR",
-        "name": "message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs",
+        "name": "message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_",
         "description": null,
         "isOneOf": null,
         "fields": null,

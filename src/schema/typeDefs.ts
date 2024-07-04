@@ -58,7 +58,7 @@ input ScheduleServiceMessageInput {
 	email: String! @constraint(format: "email", maxLength: 255)
 	location: String! @constraint(minLength: 1, maxLength: 10)
 	service: String! @constraint(minLength: 1, maxLength: 40)
-	message: String! @constraint(pattern: "^[0-9a-zA-Z\s]*$", minLength: 10, maxLength: 255)
+	message: String! @constraint(pattern: "[A-Za-z0-9 _.,!'/$]*", minLength: 10, maxLength: 255)
 }
 
 # Queries

@@ -3,11 +3,13 @@ import { typeDefs, resolvers } from './schema';
 import { ApolloServer, BaseContext } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { expressMiddleware } from '@apollo/server/express4';
-import express from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import http from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
+import { CustomContext } from './types';
+import client from './lib/apolloClient';
 
 // Configre environment variables
 
@@ -17,7 +19,7 @@ dotenv.config();
 
 const app = express();
 
-// Create an http server to use locally - hosting provider will 
+// Create an http server to use locally - hosting provider will
 // provide Secure transfers in production
 
 const httpServer = http.createServer(app);
@@ -40,7 +42,7 @@ schema = constraintDirective()(schema);
 // Create Apollo Server instance
 
 // To Do: Disable introspection in production after live testing
-const server = new ApolloServer<BaseContext>({
+const server = new ApolloServer<CustomContext>({
 	schema,
 	introspection: true,
 	plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -56,8 +58,18 @@ const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 const startApolloServer = async () => {
 	try {
 		await server.start();
-		app.use('/graphql', cors({ origin: allowedOrigins }), express.json(), expressMiddleware(server));
-	
+		app.use(
+			'/graphql',
+			cors({ origin: allowedOrigins }),
+			express.json(),
+			expressMiddleware(server, {
+				context: async ({ req }: { req: Request }) => {
+					return {
+						client,
+					};
+				},
+			})
+		);
 	} catch (err: any) {
 		console.error('Error starting server', err);
 	}

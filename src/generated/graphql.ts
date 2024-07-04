@@ -18,7 +18,7 @@ export type Scalars = {
   familyName_String_NotNull_minLength_1_maxLength_20: { input: any; output: any; }
   givenName_String_NotNull_minLength_1_maxLength_20: { input: any; output: any; }
   location_String_NotNull_minLength_1_maxLength_10: { input: any; output: any; }
-  message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs: { input: any; output: any; }
+  message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_: { input: any; output: any; }
   service_String_NotNull_minLength_1_maxLength_40: { input: any; output: any; }
   tel_String_NotNull_minLength_1_maxLength_12: { input: any; output: any; }
 };
@@ -64,7 +64,7 @@ export type ScheduleServiceMessageInput = {
   familyName: Scalars['familyName_String_NotNull_minLength_1_maxLength_20']['input'];
   givenName: Scalars['givenName_String_NotNull_minLength_1_maxLength_20']['input'];
   location: Scalars['location_String_NotNull_minLength_1_maxLength_10']['input'];
-  message: Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs']['input'];
+  message: Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_']['input'];
   service: Scalars['service_String_NotNull_minLength_1_maxLength_40']['input'];
   tel: Scalars['tel_String_NotNull_minLength_1_maxLength_12']['input'];
 };
@@ -185,7 +185,7 @@ export type ResolversTypes = {
   givenName_String_NotNull_minLength_1_maxLength_20: ResolverTypeWrapper<Scalars['givenName_String_NotNull_minLength_1_maxLength_20']['output']>;
   imageObject: ResolverTypeWrapper<ImageObject>;
   location_String_NotNull_minLength_1_maxLength_10: ResolverTypeWrapper<Scalars['location_String_NotNull_minLength_1_maxLength_10']['output']>;
-  message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs: ResolverTypeWrapper<Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs']['output']>;
+  message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_: ResolverTypeWrapper<Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_']['output']>;
   service_String_NotNull_minLength_1_maxLength_40: ResolverTypeWrapper<Scalars['service_String_NotNull_minLength_1_maxLength_40']['output']>;
   tel_String_NotNull_minLength_1_maxLength_12: ResolverTypeWrapper<Scalars['tel_String_NotNull_minLength_1_maxLength_12']['output']>;
 };
@@ -210,7 +210,7 @@ export type ResolversParentTypes = {
   givenName_String_NotNull_minLength_1_maxLength_20: Scalars['givenName_String_NotNull_minLength_1_maxLength_20']['output'];
   imageObject: ImageObject;
   location_String_NotNull_minLength_1_maxLength_10: Scalars['location_String_NotNull_minLength_1_maxLength_10']['output'];
-  message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs: Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs']['output'];
+  message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_: Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_']['output'];
   service_String_NotNull_minLength_1_maxLength_40: Scalars['service_String_NotNull_minLength_1_maxLength_40']['output'];
   tel_String_NotNull_minLength_1_maxLength_12: Scalars['tel_String_NotNull_minLength_1_maxLength_12']['output'];
 };
@@ -304,8 +304,8 @@ export interface Location_String_NotNull_MinLength_1_MaxLength_10ScalarConfig ex
   name: 'location_String_NotNull_minLength_1_maxLength_10';
 }
 
-export interface Message_String_NotNull_MinLength_10_MaxLength_255_Pattern_09azAZsScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs'], any> {
-  name: 'message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs';
+export interface Message_String_NotNull_MinLength_10_MaxLength_255_Pattern_AZaz09_ScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_'], any> {
+  name: 'message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_';
 }
 
 export interface Service_String_NotNull_MinLength_1_MaxLength_40ScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['service_String_NotNull_minLength_1_maxLength_40'], any> {
@@ -329,7 +329,7 @@ export type Resolvers<ContextType = any> = {
   givenName_String_NotNull_minLength_1_maxLength_20?: GraphQLScalarType;
   imageObject?: ImageObjectResolvers<ContextType>;
   location_String_NotNull_minLength_1_maxLength_10?: GraphQLScalarType;
-  message_String_NotNull_minLength_10_maxLength_255_pattern_09azAZs?: GraphQLScalarType;
+  message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_?: GraphQLScalarType;
   service_String_NotNull_minLength_1_maxLength_40?: GraphQLScalarType;
   tel_String_NotNull_minLength_1_maxLength_12?: GraphQLScalarType;
 };
