@@ -3,13 +3,14 @@ import { typeDefs, resolvers } from './schema';
 import { ApolloServer, BaseContext } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { expressMiddleware } from '@apollo/server/express4';
-import express, { Request } from 'express';
+import express, { Request, NextFunction } from 'express';
 import cors from 'cors';
 import http from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
 import { CustomContext } from './types';
 import client from './lib/apolloClient';
+import DOMpurify from 'dompurify';
 
 // Configre environment variables
 
@@ -23,6 +24,33 @@ const app = express();
 // provide Secure transfers in production
 
 const httpServer = http.createServer(app);
+
+export const sanitizeMiddleware = ({ input }: any, next: NextFunction) => {
+	// Sanitize all input fields recursively
+	function sanitizeObject(obj: any) {
+		if (obj === null || typeof obj !== 'object') {
+			return obj;
+		}
+		const sanitizedObj: { [key: string]: any } = {};
+		for (const key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				const value = obj[key];
+				if (value !== null && typeof value === 'object') {
+					sanitizedObj[key] = sanitizeObject(value);
+				} else {
+					sanitizedObj[key] = DOMpurify.sanitize(value);
+				}
+			}
+		}
+		return sanitizedObj;
+	}
+
+	// Sanitize the input object recursively
+	const sanitizedInput = sanitizeObject(input);
+
+	// Call the next middleware function or resolver
+	return next({ input: sanitizedInput });
+};
 
 // Declare local port or allow hosting provider to assign port
 
@@ -54,13 +82,14 @@ const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 
 // Start Apollo Server, Apply middleware to express app, including CORS and JSON parsing,
 // allows server to use /graphql endpoint
+// Add access-control-allow-credentials header to allow cookies to be sent to the server
 
 const startApolloServer = async () => {
 	try {
 		await server.start();
 		app.use(
 			'/graphql',
-			cors({ origin: allowedOrigins }),
+			cors({ origin: allowedOrigins, credentials: true }),
 			express.json(),
 			expressMiddleware(server, {
 				context: async ({ req }: { req: Request }) => {
@@ -68,6 +97,7 @@ const startApolloServer = async () => {
 						client,
 					};
 				},
+				// middleware: [sanitizeMiddleware],
 			})
 		);
 	} catch (err: any) {
