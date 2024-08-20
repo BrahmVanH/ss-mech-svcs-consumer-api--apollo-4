@@ -18,6 +18,7 @@
 		"@aws-sdk/client-s3": "^3.608.0",
 		"@aws-sdk/credential-providers": "^3.606.0",
 		"@aws-sdk/s3-request-presigner": "^3.608.0",
+		"aws-sdk": "^2.1679.0",
 		"bcryptjs": "^2.4.3",
 		"cors": "^2.8.5",
 		"dompurify": "^3.1.6",

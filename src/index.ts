@@ -10,6 +10,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
 import { CustomContext } from './types';
 import client from './lib/apolloClient';
+import scrape from './lib/thumbtack_review_scraper';
 import DOMpurify from 'dompurify';
 
 // Configre environment variables
@@ -93,11 +94,19 @@ const startApolloServer = async () => {
 			express.json(),
 			expressMiddleware(server, {
 				context: async ({ req }: { req: Request }) => {
+					// const provided_api_key = req.headers.authorization ?? '';
+					// console.log('API Key:', provided_api_key);
+					// // Compare api key provided by client to env
+					// if (provided_api_key !== process.env.API_KEY) {
+					// 	console.log('Invalid API Key');
+					// 	throw new Error('Invalid API Key');
+					// }
+
 					return {
 						client,
+						scrape,
 					};
 				},
-				// middleware: [sanitizeMiddleware],
 			})
 		);
 	} catch (err: any) {
