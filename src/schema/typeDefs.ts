@@ -67,7 +67,7 @@ type Query {
 
 
 	# S3 Queries
-	# getPresignedS3Url(imgKey: String!, commandType: String!, altTag: String!): String!
+	getPresignedS3Urls(keys: [String!]!): [String!]!
 
 	# Thumbtack Review Queries
 	queryThumbtackReviews: [ThumbtackReview!]

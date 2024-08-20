@@ -45,7 +45,13 @@ export type MutationSendScheduleServiceMessageArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  getPresignedS3Urls: Array<Scalars['String']['output']>;
   queryThumbtackReviews?: Maybe<Array<ThumbtackReview>>;
+};
+
+
+export type QueryGetPresignedS3UrlsArgs = {
+  keys: Array<Scalars['String']['input']>;
 };
 
 export type ScheduleServiceMessage = {
@@ -247,6 +253,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getPresignedS3Urls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlsArgs, 'keys'>>;
   queryThumbtackReviews?: Resolver<Maybe<Array<ResolversTypes['ThumbtackReview']>>, ParentType, ContextType>;
 };
 
