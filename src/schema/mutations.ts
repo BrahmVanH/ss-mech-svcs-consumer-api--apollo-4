@@ -3,7 +3,6 @@ import { gql } from '@apollo/client/core';
 const mutations: MutationResolvers = {
 	sendScheduleServiceMessage: async (_: {}, args: MutationSendScheduleServiceMessageArgs, { client }) => {
 		const messageContent = args.input;
-		console.log('sending email to lambda function');
 		if (!messageContent.givenName || !messageContent.familyName || !messageContent.tel || !messageContent.email || !messageContent.location || !messageContent.service || !messageContent.message) {
 			throw new Error('All fields must be filled to send message');
 		}

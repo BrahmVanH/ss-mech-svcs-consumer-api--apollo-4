@@ -9,11 +9,9 @@ import { execSync } from 'child_process';
 const scrape = () => {
 	const scrapedData = execSync('python src/lib/thumbtack_review_scraper/thumbtack_scraper.py', { encoding: 'utf8' });
 	const jsonString = scrapedData.replace(/ '/g, ' "').replace(/' /g, '" ').replace(/{'/g, '{"').replace(/'}/g, '"}').replace(/':/g, '":').replace(/',/g, '",');
-	console.log('jsonString', jsonString);
 	const reviewJson = JSON.parse(jsonString);
 
 	if (reviewJson.length === 0 || !reviewJson) {
-		console.log('reviewJson', reviewJson);
 		throw new Error('No data returned from scraper');
 	}
 
@@ -22,7 +20,6 @@ const scrape = () => {
 	if (reviews.length === 0 || !reviews) {
 		throw new Error('No data returned from scraper');
 	}
-	console.log('reviews', reviews);
 
 	return reviews;
 };
