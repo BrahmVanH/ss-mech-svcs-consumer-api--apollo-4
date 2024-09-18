@@ -33,6 +33,13 @@ export type DeleteS3ObjectResponse = {
   status: Scalars['Int']['output'];
 };
 
+export type ImgObj = {
+  __typename?: 'ImgObj';
+  alt?: Maybe<Scalars['String']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   sendScheduleServiceMessage: Scalars['String']['output'];
@@ -45,12 +52,12 @@ export type MutationSendScheduleServiceMessageArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  getPresignedS3Urls: Array<Scalars['String']['output']>;
+  getPresignedS3Objects: Array<ImgObj>;
   queryThumbtackReviews?: Maybe<Array<ThumbtackReview>>;
 };
 
 
-export type QueryGetPresignedS3UrlsArgs = {
+export type QueryGetPresignedS3ObjectsArgs = {
   keys: Array<Scalars['String']['input']>;
 };
 
@@ -91,15 +98,6 @@ export type ThumbtackReviewAuthor = {
 export type ThumbtackReviewRating = {
   __typename?: 'ThumbtackReviewRating';
   ratingValue: Scalars['Int']['output'];
-};
-
-export type ImageObject = {
-  __typename?: 'imageObject';
-  imgKey: Scalars['String']['output'];
-  original: Scalars['String']['output'];
-  originalAlt: Scalars['String']['output'];
-  thumbnail: Scalars['String']['output'];
-  thumbnailAlt: Scalars['String']['output'];
 };
 
 
@@ -177,6 +175,7 @@ export type ResolversTypes = {
   DeleteS3ObjectInput: DeleteS3ObjectInput;
   DeleteS3ObjectResponse: ResolverTypeWrapper<DeleteS3ObjectResponse>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
+  ImgObj: ResolverTypeWrapper<ImgObj>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -189,7 +188,6 @@ export type ResolversTypes = {
   email_String_NotNull_maxLength_255_format_email: ResolverTypeWrapper<Scalars['email_String_NotNull_maxLength_255_format_email']['output']>;
   familyName_String_NotNull_minLength_1_maxLength_20: ResolverTypeWrapper<Scalars['familyName_String_NotNull_minLength_1_maxLength_20']['output']>;
   givenName_String_NotNull_minLength_1_maxLength_20: ResolverTypeWrapper<Scalars['givenName_String_NotNull_minLength_1_maxLength_20']['output']>;
-  imageObject: ResolverTypeWrapper<ImageObject>;
   location_String_NotNull_minLength_1_maxLength_10: ResolverTypeWrapper<Scalars['location_String_NotNull_minLength_1_maxLength_10']['output']>;
   message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_: ResolverTypeWrapper<Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_']['output']>;
   service_String_NotNull_minLength_1_maxLength_40: ResolverTypeWrapper<Scalars['service_String_NotNull_minLength_1_maxLength_40']['output']>;
@@ -202,6 +200,7 @@ export type ResolversParentTypes = {
   DeleteS3ObjectInput: DeleteS3ObjectInput;
   DeleteS3ObjectResponse: DeleteS3ObjectResponse;
   Float: Scalars['Float']['output'];
+  ImgObj: ImgObj;
   Int: Scalars['Int']['output'];
   Mutation: {};
   Query: {};
@@ -214,7 +213,6 @@ export type ResolversParentTypes = {
   email_String_NotNull_maxLength_255_format_email: Scalars['email_String_NotNull_maxLength_255_format_email']['output'];
   familyName_String_NotNull_minLength_1_maxLength_20: Scalars['familyName_String_NotNull_minLength_1_maxLength_20']['output'];
   givenName_String_NotNull_minLength_1_maxLength_20: Scalars['givenName_String_NotNull_minLength_1_maxLength_20']['output'];
-  imageObject: ImageObject;
   location_String_NotNull_minLength_1_maxLength_10: Scalars['location_String_NotNull_minLength_1_maxLength_10']['output'];
   message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_: Scalars['message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_']['output'];
   service_String_NotNull_minLength_1_maxLength_40: Scalars['service_String_NotNull_minLength_1_maxLength_40']['output'];
@@ -248,12 +246,19 @@ export type DeleteS3ObjectResponseResolvers<ContextType = any, ParentType extend
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ImgObjResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImgObj'] = ResolversParentTypes['ImgObj']> = {
+  alt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  key?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   sendScheduleServiceMessage?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationSendScheduleServiceMessageArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getPresignedS3Urls?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetPresignedS3UrlsArgs, 'keys'>>;
+  getPresignedS3Objects?: Resolver<Array<ResolversTypes['ImgObj']>, ParentType, ContextType, RequireFields<QueryGetPresignedS3ObjectsArgs, 'keys'>>;
   queryThumbtackReviews?: Resolver<Maybe<Array<ResolversTypes['ThumbtackReview']>>, ParentType, ContextType>;
 };
 
@@ -298,15 +303,6 @@ export interface GivenName_String_NotNull_MinLength_1_MaxLength_20ScalarConfig e
   name: 'givenName_String_NotNull_minLength_1_maxLength_20';
 }
 
-export type ImageObjectResolvers<ContextType = any, ParentType extends ResolversParentTypes['imageObject'] = ResolversParentTypes['imageObject']> = {
-  imgKey?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  original?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  originalAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  thumbnail?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  thumbnailAlt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export interface Location_String_NotNull_MinLength_1_MaxLength_10ScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['location_String_NotNull_minLength_1_maxLength_10'], any> {
   name: 'location_String_NotNull_minLength_1_maxLength_10';
 }
@@ -325,6 +321,7 @@ export interface Tel_String_NotNull_MinLength_1_MaxLength_12ScalarConfig extends
 
 export type Resolvers<ContextType = any> = {
   DeleteS3ObjectResponse?: DeleteS3ObjectResponseResolvers<ContextType>;
+  ImgObj?: ImgObjResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   ScheduleServiceMessage?: ScheduleServiceMessageResolvers<ContextType>;
@@ -334,7 +331,6 @@ export type Resolvers<ContextType = any> = {
   email_String_NotNull_maxLength_255_format_email?: GraphQLScalarType;
   familyName_String_NotNull_minLength_1_maxLength_20?: GraphQLScalarType;
   givenName_String_NotNull_minLength_1_maxLength_20?: GraphQLScalarType;
-  imageObject?: ImageObjectResolvers<ContextType>;
   location_String_NotNull_minLength_1_maxLength_10?: GraphQLScalarType;
   message_String_NotNull_minLength_10_maxLength_255_pattern_AZaz09_?: GraphQLScalarType;
   service_String_NotNull_minLength_1_maxLength_40?: GraphQLScalarType;

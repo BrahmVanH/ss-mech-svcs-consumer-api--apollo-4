@@ -18,8 +18,8 @@ export const getSignedUrls = async (keys: string[]) => {
 	const bucketName = process.env.AWS_BUCKET_NAME ?? '';
 
 	try {
-		const urls = keys.map(async (key) => {
-			return await getSignedUrl(
+		const ImgObjs = keys.map(async (key) => {
+			const url = await getSignedUrl(
 				s3,
 				new GetObjectCommand({
 					Bucket: bucketName,
@@ -29,15 +29,23 @@ export const getSignedUrls = async (keys: string[]) => {
 					expiresIn: 3600,
 				}
 			);
+			if (!url) {
+				console.error('Error in signing the url');
+				return '';
+			}
+			
+			return {
+				key,
+				url,
+			};
 		});
 
-    if (!urls) {
-      console.error('An unknown error occurred while trying to get presigned s3 urls');
-      return '';
-    }
+		if (!ImgObjs) {
+			console.error('An unknown error occurred while trying to get presigned s3 urls');
+			return '';
+		}
 
-    return urls;
-    
+		return ImgObjs;
 	} catch (err) {
 		console.error('there was an error in signing the url', err);
 		return '';

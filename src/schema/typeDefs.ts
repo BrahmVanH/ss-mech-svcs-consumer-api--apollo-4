@@ -1,12 +1,10 @@
 const typeDefs = `#graphql
 # AWS S3 Types
 
-type imageObject {
-	imgKey: String!
-	original: String!
-	thumbnail: String!
-	originalAlt: String!
-	thumbnailAlt: String!
+type ImgObj {
+	key: String
+	url: String
+	alt: String
 }
 
 type DeleteS3ObjectResponse {
@@ -67,7 +65,7 @@ type Query {
 
 
 	# S3 Queries
-	getPresignedS3Urls(keys: [String!]!): [String!]!
+	getPresignedS3Objects(keys: [String!]!): [ImgObj!]!
 
 	# Thumbtack Review Queries
 	queryThumbtackReviews: [ThumbtackReview!]
