@@ -1,4 +1,4 @@
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { getSignedUrl } from '@aws-sdk/cloudfront-signer';
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 export const getSignedUrls = async (keys: string[]) => {
@@ -7,36 +7,29 @@ export const getSignedUrls = async (keys: string[]) => {
 		return '';
 	}
 
-	const s3 = new S3Client({
-		region: process.env.AWS_REGION ?? '',
-		credentials: {
-			accessKeyId: process.env.AWS_ACCESS_KEY ?? '',
-			secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
-		},
-	});
+	const privateKey = process.env.CLOUDFRONT_PRIVATE_KEY ?? '';
+	const cloudfrontDomain = process.env.CLOUDFRONT_DOMAIN ?? '';
+	const keyPairId = process.env.CLOUDFRONT_KEYPAIR_ID ?? '';
+	const dateLessThan = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 
-	const bucketName = process.env.AWS_BUCKET_NAME ?? '';
 
 	try {
 		const ImgObjs = keys.map(async (key) => {
-			const url = await getSignedUrl(
-				s3,
-				new GetObjectCommand({
-					Bucket: bucketName,
-					Key: key,
-				}),
-				{
-					expiresIn: 3600,
-				}
-			);
-			if (!url) {
+			const url = `${cloudfrontDomain}/${key}`;
+			const signedUrl = await getSignedUrl({
+				url,
+				keyPairId,
+				dateLessThan,
+				privateKey,
+			});
+			if (!signedUrl) {
 				console.error('Error in signing the url');
 				return '';
 			}
-			
+
 			return {
 				key,
-				url,
+				url: signedUrl,
 			};
 		});
 
