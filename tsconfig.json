@@ -1,6 +1,11 @@
 {
 	"compilerOptions": {
 		/* Language and Environment */
+		"typeRoots": ["./node_modules/@types", "./types"],
+		"baseUrl": ".",
+		"paths": {
+			"*": ["types/*"]
+		},
 		"outDir": "./build",
 		"target": "es2016" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
 		/* Modules */
@@ -12,5 +17,6 @@
 		/* Type Checking */
 		"strict": true,
 		"skipLibCheck": true
-	}
+	},
+	"include": ["src/**/*", "types/**/*"]
 }

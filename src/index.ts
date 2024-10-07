@@ -8,10 +8,12 @@ import cors from 'cors';
 import http from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
-import { CustomContext } from './types';
+import { CustomContext } from 'types';
 import client from './lib/apolloClient';
 import scrape from './lib/thumbtack_review_scraper';
-import DOMpurify from 'dompurify';
+import rateLimiterMiddleware from './lib/rateLimiterMiddleware';
+import RedisManager from './lib/RedisManager';
+import sanitizer from 'perfect-express-sanitizer';
 
 // Configre environment variables
 
@@ -25,33 +27,6 @@ const app = express();
 // provide Secure transfers in production
 
 const httpServer = http.createServer(app);
-
-export const sanitizeMiddleware = ({ input }: any, next: NextFunction) => {
-	// Sanitize all input fields recursively
-	function sanitizeObject(obj: any) {
-		if (obj === null || typeof obj !== 'object') {
-			return obj;
-		}
-		const sanitizedObj: { [key: string]: any } = {};
-		for (const key in obj) {
-			if (obj.hasOwnProperty(key)) {
-				const value = obj[key];
-				if (value !== null && typeof value === 'object') {
-					sanitizedObj[key] = sanitizeObject(value);
-				} else {
-					sanitizedObj[key] = DOMpurify.sanitize(value);
-				}
-			}
-		}
-		return sanitizedObj;
-	}
-
-	// Sanitize the input object recursively
-	const sanitizedInput = sanitizeObject(input);
-
-	// Call the next middleware function or resolver
-	return next({ input: sanitizedInput });
-};
 
 // Declare local port or allow hosting provider to assign port
 
@@ -81,6 +56,11 @@ const server = new ApolloServer<CustomContext>({
 
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 
+RedisManager.connect().catch((err: any) => {
+	console.error('Error connecting to Redis', err);
+	process.exit(1);
+});
+
 // Start Apollo Server, Apply middleware to express app, including CORS and JSON parsing,
 // allows server to use /graphql endpoint
 // Add access-control-allow-credentials header to allow cookies to be sent to the server
@@ -88,6 +68,14 @@ const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 const startApolloServer = async () => {
 	try {
 		await server.start();
+		app.use(rateLimiterMiddleware);
+		app.use(
+			sanitizer.clean({
+				xss: true,
+				noSql: true,
+				sql: true,
+			})
+		);
 		app.use(
 			'/graphql',
 			cors({ origin: allowedOrigins, credentials: true }),
