@@ -1,5 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
-
+// a
 const client = new ApolloClient({
 	cache: new InMemoryCache(),
 	link: new HttpLink({
@@ -8,6 +8,7 @@ const client = new ApolloClient({
 			origin: process.env.CORS_ORIGIN ?? 'http://localhost:4000',
 		},
 	}),
+
 	defaultOptions: {
 		query: {
 			fetchPolicy: 'no-cache',
@@ -15,6 +16,7 @@ const client = new ApolloClient({
 		mutate: {
 			fetchPolicy: 'no-cache',
 		},
+		
 	},
 });
 

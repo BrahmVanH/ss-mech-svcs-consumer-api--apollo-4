@@ -73,10 +73,10 @@ type Query {
 
 }
 
- type Mutation {
+ type Mutation  {
 
  	# Schedule Service Mutations (API to API)
- 	sendScheduleServiceMessage(input: ScheduleServiceMessageInput!): String!
+ 	sendScheduleServiceMessage(input: ScheduleServiceMessageInput!): String! @rateLimit(limit: 5, duration: 3600)
 
 }
 `;

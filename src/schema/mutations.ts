@@ -1,9 +1,27 @@
 import { MutationResolvers, MutationSendScheduleServiceMessageArgs } from '../generated/graphql';
 import { gql } from '@apollo/client/core';
+import sanitizer, { SanitizerOptions } from 'perfect-express-sanitizer';
+
 const mutations: MutationResolvers = {
 	sendScheduleServiceMessage: async (_: {}, args: MutationSendScheduleServiceMessageArgs, { client }) => {
+		const options: SanitizerOptions = {
+			xss: true,
+			noSql: true,
+			sql: true,
+			level: 1,
+		};
 		const messageContent = args.input;
-		if (!messageContent.givenName || !messageContent.familyName || !messageContent.tel || !messageContent.email || !messageContent.location || !messageContent.service || !messageContent.message) {
+		const sanitizedContent = sanitizer.sanitize(messageContent, options);
+
+		if (
+			!sanitizedContent.givenName ||
+			!sanitizedContent.familyName ||
+			!sanitizedContent.tel ||
+			!sanitizedContent.email ||
+			!sanitizedContent.location ||
+			!sanitizedContent.service ||
+			!sanitizedContent.message
+		) {
 			throw new Error('All fields must be filled to send message');
 		}
 

@@ -1,19 +1,17 @@
 import dotenv from 'dotenv';
 import { typeDefs, resolvers } from './schema';
-import { ApolloServer, BaseContext } from '@apollo/server';
+import { ApolloServer } from '@apollo/server';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { expressMiddleware } from '@apollo/server/express4';
-import express, { Request, NextFunction } from 'express';
+import express, { Request } from 'express';
 import cors from 'cors';
 import http from 'http';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
-import { CustomContext } from 'types';
+import { rateLimitDirective } from 'graphql-rate-limit-directive';
+import { CustomContext } from '../types/types';
 import client from './lib/apolloClient';
 import scrape from './lib/thumbtack_review_scraper';
-import rateLimiterMiddleware from './lib/rateLimiterMiddleware';
-import RedisManager from './lib/RedisManager';
-import sanitizer from 'perfect-express-sanitizer';
 
 // Configre environment variables
 
@@ -34,14 +32,17 @@ const port = process.env.PORT ?? 4000;
 
 // Create schema and apply constraint directives for validation
 
+const { rateLimitDirectiveTypeDefs, rateLimitDirectiveTransformer } = rateLimitDirective();
+
 let schema = makeExecutableSchema({
-	typeDefs: [constraintDirectiveTypeDefs, typeDefs],
+	typeDefs: [constraintDirectiveTypeDefs, rateLimitDirectiveTypeDefs, typeDefs],
 	resolvers,
 });
 
-// Apply constraint directives to schema
+// Apply constraint and rate limit directives to schema
 
 schema = constraintDirective()(schema);
+schema = rateLimitDirectiveTransformer(schema);
 
 // Create Apollo Server instance
 
@@ -56,11 +57,6 @@ const server = new ApolloServer<CustomContext>({
 
 const allowedOrigins = process.env.CORS_ORIGINS?.split(',') || [];
 
-RedisManager.connect().catch((err: any) => {
-	console.error('Error connecting to Redis', err);
-	process.exit(1);
-});
-
 // Start Apollo Server, Apply middleware to express app, including CORS and JSON parsing,
 // allows server to use /graphql endpoint
 // Add access-control-allow-credentials header to allow cookies to be sent to the server
@@ -68,14 +64,7 @@ RedisManager.connect().catch((err: any) => {
 const startApolloServer = async () => {
 	try {
 		await server.start();
-		app.use(rateLimiterMiddleware);
-		app.use(
-			sanitizer.clean({
-				xss: true,
-				noSql: true,
-				sql: true,
-			})
-		);
+	
 		app.use(
 			'/graphql',
 			cors({ origin: allowedOrigins, credentials: true }),

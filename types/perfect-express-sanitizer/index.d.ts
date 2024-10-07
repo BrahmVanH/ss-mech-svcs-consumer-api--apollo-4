@@ -1,7 +1,7 @@
 declare module 'perfect-express-sanitizer' {
 	import { RequestHandler } from 'express';
 
-	interface SanitizerOptions {
+	export interface SanitizerOptions {
 		xss?: boolean;
 		noSql?: boolean;
 		sql?: boolean;
@@ -10,7 +10,7 @@ declare module 'perfect-express-sanitizer' {
 		replace?: (value: any) => any;
 	}
 
-	interface Sanitizer {
+	export interface Sanitizer {
 		clean(options?: SanitizerOptions): RequestHandler;
 		middleware(options?: SanitizerOptions): RequestHandler;
 		sanitize(data: any, options?: SanitizerOptions): any;
